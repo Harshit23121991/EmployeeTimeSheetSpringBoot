@@ -173,22 +173,4 @@ public class UserController {
     return new ResponseEntity<>(resetPwdResponse, HttpStatus.OK);
   }
 
-  @RequestMapping(
-      value = "/getvalidatemailtoken",
-      params = { "emailtoken", "email" },
-      method = RequestMethod.GET)
-  public ResponseEntity<UserCustomResponse> validateMailToken(@RequestParam("emailtoken") String emailtoken,
-      @RequestParam("email") String email) {
-    UserCustomResponse mailTokenResponse = new UserCustomResponse();
-    boolean validateToken = userService.validateEmailToken(emailtoken, email);
-    if (validateToken) {
-      mailTokenResponse.setIsSuccess(true);
-      //mailTokenResponse.setMessage(OtherEnum.TOKEN_VALID.getValue());
-      return new ResponseEntity<>(mailTokenResponse, HttpStatus.OK);
-    } else {
-      mailTokenResponse.setIsSuccess(false);
-      //mailTokenResponse.setMessage(OtherEnum.TOKEN_INVALID.getValue());
-      return new ResponseEntity<>(mailTokenResponse, HttpStatus.OK);
-    }
-  }
 }

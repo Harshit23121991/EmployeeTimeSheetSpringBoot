@@ -14,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "itc_roles")
 public class Role implements Serializable {
 	
 	private static final long serialVersionUID = 324234234321L;
