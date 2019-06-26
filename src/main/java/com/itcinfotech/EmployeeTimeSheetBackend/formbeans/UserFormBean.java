@@ -3,15 +3,8 @@ package com.itcinfotech.EmployeeTimeSheetBackend.formbeans;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author Pavan
- *
- */
 public class UserFormBean implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private Long userId;

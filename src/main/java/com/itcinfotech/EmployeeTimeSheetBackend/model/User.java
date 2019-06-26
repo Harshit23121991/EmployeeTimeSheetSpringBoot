@@ -13,12 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**
- * @author Pavan
- *
- */
 @Entity
-@Table(name = "itc_user")
+@Table(name = "user")
 public class User implements Serializable {
 	private static final long serialVersionUID = 115782561L;
 

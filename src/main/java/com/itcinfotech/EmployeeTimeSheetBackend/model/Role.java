@@ -13,16 +13,10 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.GenericGenerator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @author Pavan
- *
- */
 @Entity
-@Table(name = "itc_roles")
+@Table(name = "roles")
 public class Role implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 324234234321L;
 
 	@Id

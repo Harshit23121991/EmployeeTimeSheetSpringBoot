@@ -6,10 +6,8 @@ import java.util.Optional;
 /*import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;*/
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.itcinfotech.EmployeeTimeSheetBackend.exceptions.UserNotFoundException;
 import com.itcinfotech.EmployeeTimeSheetBackend.model.User;
@@ -23,19 +21,6 @@ public class UserServiceImpl implements UserService {
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-  @Value("${pbb.folder.user}")
-  private String fileUploadDocFolder;
-
-  @Value("${pbb.folder.profilepic}")
-  private String profilePicFolder;
-
-  @Value("${pbb.create.pwd}")
-  private String PBB_CREATE_PWD;
-  @Value("${pbb.base.url}")
-  private String PBB_BASE_URL;
-  @Value("${pbb.mail.token.time.interval}")
-  private Integer mailTokenTimeInterval;
 
  // static final Logger logger = LogManager.getLogger(UserServiceImpl.class.getName());
 
@@ -63,18 +48,6 @@ public class UserServiceImpl implements UserService {
     User.setIsActive(1L);
     userRepository.save(User);
     return User;
-  }
-
-  @Override
-  public String inviteUser(String email) {
-    if (email == null) {
-      throw new UserNotFoundException();
-    }
-    // moduleId hardcoded as mail template coming from database..
-    // Long moduleId = 3L;
-   // String moduleName = MailModuleEnum.INVITE_USER_MODULE.name();
-   // mailUtility.sendMailToUser(email, PBB_BASE_URL + "/#/signup", moduleName, null, null, null);
-    return "success";
   }
 
   /*@Transactional
@@ -270,70 +243,4 @@ public class UserServiceImpl implements UserService {
     return user;
   }
 */
-  public User findLrgNameAndAddress(String email) {
-    User user = userRepository.findUserByEmail(email);
-    if (user == null) {
-      throw new UserNotFoundException();
-    }
-    return user;
-  }
-
-@Override
-public User updateUser(User user, MultipartFile[] files, MultipartFile profilePic, String removeProfilePic) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public boolean validateEmailToken(String mailToken, String email) {
-	// TODO Auto-generated method stub
-	return false;
-}
-
-@Override
-public List<User> findOrgByEmail(Long orgId) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public List<User> findOrgByIsSignatory(Long orgId) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public String zipFiles(MultipartFile[] files, Long projectId) {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public void isUserActive(Long userId) {
-	// TODO Auto-generated method stub
-	
-}
-
-  /*public Map<String, List<String>> uploadFile(MultipartFile[] files, Long projectId) {
-    Map<String, List<String>> filePathToFileNameAndSizeListMap = null;
-    if (files != null) {
-      for (MultipartFile file : files) {
-        if (file != null && !file.isEmpty()) {
-          Map<String, String> filePathMap = fileUploadUtility.uploadFile(file, projectId, fileUploadDocFolder);
-          if (filePathMap.get("error_message") != null) {
-            throw new FileAlreadyExistException();
-          } else {
-            if (filePathToFileNameAndSizeListMap == null) {
-              filePathToFileNameAndSizeListMap = new LinkedHashMap<>();
-            }
-            List<String> nameAndSizeMapList = new ArrayList<>();
-            nameAndSizeMapList.add(filePathMap.get("file_name"));
-            nameAndSizeMapList.add(file.getSize() + "");
-            filePathToFileNameAndSizeListMap.put(filePathMap.get("file_path"), nameAndSizeMapList);
-          }
-        }
-      }
-    }
-    return filePathToFileNameAndSizeListMap;
-  }*/
 }

@@ -1,8 +1,6 @@
 package com.itcinfotech.EmployeeTimeSheetBackend.controller;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +8,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itcinfotech.EmployeeTimeSheetBackend.exceptions.UserAlreadyExistException;
 import com.itcinfotech.EmployeeTimeSheetBackend.exceptions.UserNotFoundException;
 import com.itcinfotech.EmployeeTimeSheetBackend.formbeans.PasswordFormBean;
@@ -47,13 +41,6 @@ public class UserController {
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-  @Autowired
-  private ObjectMapper mapper;
-
-  @Value("${pbb.forgot.pwd}")
-  private String PBB_FORGOT_PWD;
-  @Value("${pbb.mail.token.time.interval}")
-  private Integer mailTokenTimeInterval;
   static final Logger logger = LogManager.getLogger(UserController.class.getName());
 
   /**
@@ -127,45 +114,7 @@ public class UserController {
     return new ResponseEntity<>(regResponse, HttpStatus.OK);
   }
 
-
-  /**
-   * @param user
-   * @return
-   * @throws IOException
-   * @throws JsonMappingException
-   * @throws JsonParseException
-   */
-  /*@RequestMapping(
-      value = "/updateuser",
-      method = RequestMethod.PUT)
-  public ResponseEntity<UserCustomResponse> updateUser(@RequestParam("files") MultipartFile[] files,
-      @FormDataParam("userdata") String userdata, @RequestParam(
-          value = "profilepic",
-          required = false) MultipartFile profilePic,
-      @RequestParam(
-          value = "removeprofilepic",
-          required = false) String removeProfilePic)
-      throws JsonParseException, JsonMappingException, IOException {
-    UserCustomResponse updateResponse = new UserCustomResponse();
-    User userObj = mapper.readValue(userdata, User.class);
-    try {
-      fileUploadUtility.checkFileNameLength(files);
-      User userDomain = userService.updateUser(userObj, files, profilePic, removeProfilePic);
-      logger.info("User " + userDomain.getUserId() + " Updated Succesfully...");
-      updateResponse.setIsSuccess(true);
-      updateResponse.setUserId(userDomain.getUserId());
-      updateResponse.setMessage(UserEnum.USER_UPDATE.getValue() + OtherEnum.SUCCESS_MSG.getValue());
-    } catch (UserNotFoundException | InvalidFileNameException e) {
-      updateResponse.setIsSuccess(false);
-      updateResponse.setMessage(UserEnum.USER_UPDATE.getValue() + OtherEnum.FAILURE_MSG.getValue());
-      logger.error("User Update Failed..." + e.getMessage());
-    } catch (FileAlreadyExistException fe) {
-      updateResponse.setIsSuccess(false);
-      updateResponse.setMessage(fe.getMessage());
-    }
-    return new ResponseEntity<>(updateResponse, HttpStatus.OK);
-  }*/
-
+  
   @RequestMapping(
       value = "/createpassword",
       method = RequestMethod.POST)
@@ -175,7 +124,7 @@ public class UserController {
     Date currentDate = new Date();
     Calendar cal = Calendar.getInstance();
     cal.setTime(user.getTokenCreateTime());
-    cal.add(Calendar.MINUTE, mailTokenTimeInterval);
+    //cal.add(Calendar.MINUTE, mailTokenTimeInterval);
     Date tokenExpireTime = cal.getTime();
     logger.info("tokenCreateTime : " + user.getTokenCreateTime());
     logger.info("tokenExpireTime : " + tokenExpireTime);
@@ -241,36 +190,5 @@ public class UserController {
       //mailTokenResponse.setMessage(OtherEnum.TOKEN_INVALID.getValue());
       return new ResponseEntity<>(mailTokenResponse, HttpStatus.OK);
     }
-  }
-
-  
-  @RequestMapping(
-      value = "/getsignatory",
-      params = { "orgid" },
-      method = RequestMethod.GET)
-  public List<UserCustomResponse> findOrgByIsSignatory(@RequestParam("orgid") Long orgId) {
-    List<UserCustomResponse> userResponse = new ArrayList<UserCustomResponse>();
-    UserCustomResponse userResp = null;
-    List<User> userList = null;
-    try {
-      userList = userService.findOrgByIsSignatory(orgId);
-    } catch (UserNotFoundException e) {
-      userResp = new UserCustomResponse();
-      userResp.setMessage(e.getMessage());
-      userResp.setIsSuccess(false);
-      userResponse.add(userResp);
-      return userResponse;
-    }
-    for (User user : userList) {
-      userResp = new UserCustomResponse();
-      userResp.setUserId(user.getUserId());
-      userResp.setUserFirstName(user.getFirstName());
-      userResp.setUserLastName(user.getLastName());
-      //userResp.setMessage("is signatory users : " + user.getIsSignatory());
-      userResp.setIsSuccess(true);
-      userResp.setEmail(user.getEmail());
-      userResponse.add(userResp);
-    }
-    return userResponse;
   }
 }

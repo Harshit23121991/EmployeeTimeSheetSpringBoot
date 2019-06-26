@@ -2,10 +2,6 @@ package com.itcinfotech.EmployeeTimeSheetBackend.formbeans;
 
 import java.io.Serializable;
 
-/**
- * @author 23038
- *
- */
 public class UserCustomResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;

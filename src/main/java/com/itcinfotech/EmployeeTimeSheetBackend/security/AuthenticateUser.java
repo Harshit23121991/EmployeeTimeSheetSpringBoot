@@ -1,6 +1,6 @@
 package com.itcinfotech.EmployeeTimeSheetBackend.security;
 
-import java.util.Date;
+import static java.lang.String.format;
 
 //import org.apache.log4j.LogManager;
 //import org.apache.log4j.Logger;
@@ -12,13 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.itcinfotech.EmployeeTimeSheetBackend.model.User;
 import com.itcinfotech.EmployeeTimeSheetBackend.repository.UserRepository;
-
-import static java.lang.String.format;
-
-/**
- * @author Harsimran
- *
- */
 
 @Service("userDetailsService")
 public class AuthenticateUser implements UserDetailsService {

@@ -31,22 +31,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
         .antMatchers("/signup/*", "/signup", "login", "/registeruser/*", "/registeruser", "/createpassword",
             "/createpassword/*", "/resetpassword", "/resetpassword/*", "/login/*", "/login",
-            "/organization", "/organization/*","/org", "/org/*","/getallinvestororg", "/getallinvestororg/*","/profilepics/**",
-            "/getvalidatemailtoken", "/getvalidatemailtoken/*",
-            "login?error","/getorganizationallusers", "/sendAsyncMailToUser","/sendasyncmailtoinv","/sendAsyncMailToUser/*","/sendasyncmailtoinv/*")
+            "login?error")
         .permitAll().and().authorizeRequests().anyRequest().authenticated();
 
     http.sessionManagement().maximumSessions(1000).sessionRegistry(sessionRegistry()).and().sessionFixation().none();
 
-   /* http.logout().logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessHandler(customLogoutSuccessHandler);
+   http.logout().logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID");
     
-    http.logout().logoutUrl("/logout").invalidateHttpSession(true).deleteCookies("JSESSIONID"
-        .logoutSuccessHandler((request, response, auth) -> {
-          String sessionId = request.getHeader("x-auth-token");
-          sessionRegistry.removeSessionInformation(sessionId);
-          response.setStatus(200);
-        });*/
-
     http.csrf().disable();
     http.headers().frameOptions().disable();
     http.requestCache().requestCache(new NullRequestCache());

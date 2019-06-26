@@ -5,15 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.itcinfotech.EmployeeTimeSheetBackend.model.User;
 
-/**
- * @author Pavan
- *
- */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
 	User findUserByEmail(String email);
 
 	User findByEmail(String email);
-
 	
 }
