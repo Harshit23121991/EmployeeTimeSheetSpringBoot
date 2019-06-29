@@ -10,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +37,8 @@ public class UserController {
   @Autowired
   UserRepository userRepository;
   
-  @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
+ /* @Autowired
+  private BCryptPasswordEncoder bCryptPasswordEncoder;*/
 
   static final Logger logger = LogManager.getLogger(UserController.class.getName());
 
@@ -82,35 +81,15 @@ public class UserController {
     return new ResponseEntity<>(userCustomResponse, HttpStatus.OK);
   }
 
-
-  /**
-   * @param userFormBean
-   * @return
-   * @throws UserAlreadyExistException1
-   * @throws PbbMessageException
-   */
-  @RequestMapping(
-      value = "/registeruser",
-      method = RequestMethod.POST)
-  public ResponseEntity<UserCustomResponse> saveUser(@RequestBody UserFormBean userFormBean) {
+  @RequestMapping(value = "/registeruser",  method = RequestMethod.POST)
+  public ResponseEntity<UserCustomResponse> saveUser(@RequestBody UserFormBean userFormBean) throws UserAlreadyExistException, Exception {
     UserCustomResponse regResponse = new UserCustomResponse();
-    User userDomain;
-    try {
-      userDomain = null;// userService.saveUser(userFormBean);
-      logger.info("User Created Succesfully...");
-      regResponse.setIsSuccess(true);
-      regResponse.setUserId(userDomain.getUserId());
-      regResponse.setUserType(userDomain.getUserType());
-     // regResponse.setMessage(UserEnum.USER_REG.getValue() + OtherEnum.SUCCESS_MSG.getValue());
-    } catch (UserAlreadyExistException e) {
-      regResponse.setIsSuccess(false);
-     // regResponse.setMessage(UserEnum.USER_REG.getValue() + OtherEnum.USER_ALREADY_EXIST.getValue());
-      logger.error("User Save Failed..." + e.getMessage());
-    } catch (Exception e) {
-      regResponse.setIsSuccess(false);
-      //regResponse.setMessage(UserEnum.USER_REG.getValue() + OtherEnum.FAILURE_MSG.getValue());
-      logger.error("User Save Failed..." + e.getMessage());
-    }
+	User userDomain = userService.saveUser(userFormBean);
+    logger.info("User Created Succesfully...");
+	regResponse.setIsSuccess(true);
+	regResponse.setUserId(userDomain.getUserId());
+	regResponse.setMessage("User registered Succesfully...");
+
     return new ResponseEntity<>(regResponse, HttpStatus.OK);
   }
 

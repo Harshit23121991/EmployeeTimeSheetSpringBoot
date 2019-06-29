@@ -1,15 +1,20 @@
 package com.itcinfotech.EmployeeTimeSheetBackend.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.apache.commons.lang3.RandomStringUtils;
 /*import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;*/
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.itcinfotech.EmployeeTimeSheetBackend.exceptions.UserAlreadyExistException;
 import com.itcinfotech.EmployeeTimeSheetBackend.exceptions.UserNotFoundException;
+import com.itcinfotech.EmployeeTimeSheetBackend.formbeans.UserFormBean;
 import com.itcinfotech.EmployeeTimeSheetBackend.model.User;
 import com.itcinfotech.EmployeeTimeSheetBackend.repository.UserRepository;
 
@@ -19,8 +24,8 @@ public class UserServiceImpl implements UserService {
   @Autowired
   UserRepository userRepository;
 
-  @Autowired
-  private BCryptPasswordEncoder bCryptPasswordEncoder;
+  //@Autowired
+ // private BCryptPasswordEncoder bCryptPasswordEncoder;
 
  // static final Logger logger = LogManager.getLogger(UserServiceImpl.class.getName());
 
@@ -45,44 +50,21 @@ public class UserServiceImpl implements UserService {
     if (User == null) {
       throw new UserNotFoundException();
     }
-    User.setIsActive(1L);
     userRepository.save(User);
     return User;
   }
 
-  /*@Transactional
+  @Transactional
   @Override
   public User saveUser(UserFormBean userFormBean) {
     User isExist = userRepository.findUserByEmail(userFormBean.getEmail());
-    logger.info("isExist : " + isExist);
     if (isExist != null) {
-      // throw new UserAlreadyExistException();
       throw new UserAlreadyExistException();
     }
-    User user = userRepository.save(prepareUser(userFormBean));
-    // Long moduleId = 1L;
-    String moduleName = MailModuleEnum.REGISTRATION_MODULE.name();
-    mailUtility.sendMailToUser(userFormBean.getEmail(),
-        PBB_BASE_URL + "/#/reset" + "?token=" + userFormBean.getMailToken() + "&email=" + userFormBean.getEmail(),
-        moduleName, null, null, null);
-    if (userFormBean.getUserType().equals(RoleOrgUserTypeEnum.LRG.name())
-        || userFormBean.getUserType().equals(RoleOrgUserTypeEnum.INVESTOR.name())) {
-      // moduleId = 10L;
-      moduleName = MailModuleEnum.NEW_LRG_INVESTOR__SIGNED_UP.name();
-      MailTemplate mailContent = null;
-      String extractedName = extractNameFromMailId(userFormBean.getEmail());
-      mailContent = mailUtility.getEmailTemplateByModuleId(moduleName,
-          PBB_BASE_URL + "/#/my-account?useridinfo=" + user.getUserId(), userFormBean.getEmail(), null, extractedName,
-          null);
-      List<User> opsUsersList = userRepository.findAllOpsUsers();
-      for (User opsUser : opsUsersList) {
-        mailUtility.sendAsyncMailToUser(mailContent, opsUser.getEmail());
-      }
-    }
-    return user;
+    return userRepository.save(prepareUser(userFormBean));
   }
 
-  @Transactional(
+ /*  @Transactional(
       rollbackOn = Exception.class)
   @Override
   public User updateUser(User user, MultipartFile[] files, MultipartFile profilePic, String removeProfilePic) {
@@ -197,24 +179,8 @@ public class UserServiceImpl implements UserService {
     return user;
   }*/
 
-  /*private User prepareUser(UserFormBean userFormBean) {
-    // setting userformBean values which is required for backend
+  private User prepareUser(UserFormBean userFormBean) {
     Date date = new Date();
-    // random default password
-    String password = RandomStringUtils.randomAlphanumeric(10).toUpperCase();
-    userFormBean.setPassword(bCryptPasswordEncoder.encode(password));
-    userFormBean.setIsMailTokenActive(1L);
-    userFormBean.setMailToken(UUID.randomUUID().toString());
-    userFormBean.setTokenCreateTime(date);
-    userFormBean.setIsDelete(0L);
-    userFormBean.setIsActive(0L);
-    userFormBean.setIsTermsAndConditions(0L);
-    userFormBean.setFirstName("Guest");
-    userFormBean.setIsSignatory(0L);
-    
-    userFormBean.setCreatedBy(0L);
-    userFormBean.setCreatedDate(new Date());
-    // setting formbean values to userDomain bean
     User user = new User();
     if (userFormBean.getUserId() != null) {
       user.setUserId(userFormBean.getUserId());
@@ -222,25 +188,14 @@ public class UserServiceImpl implements UserService {
     if (userFormBean.getEmail() != null && !("".equals(userFormBean.getEmail()))) {
       user.setEmail(userFormBean.getEmail().toLowerCase());
     }
-    if (userFormBean.getUserType() != null) {
-      user.setUserType(userFormBean.getUserType());
-    }
-    if (userFormBean.getRoleName() != null) {
-      Role role = new Role();
-      role.setRoleName(userFormBean.getRoleName());
-      user.setRole(role);
-    }
     user.setPassword(userFormBean.getPassword());
     user.setFirstName(userFormBean.getFirstName());
-    user.setMailToken(userFormBean.getMailToken());
-    user.setIsMailTokenActive(userFormBean.getIsMailTokenActive());
-    user.setIsSignatory(userFormBean.getIsSignatory());
-    user.setCreatedBy(userFormBean.getCreatedBy());
-    user.setCreatedDate(userFormBean.getCreatedDate());
-    user.setIsDelete(userFormBean.getIsDelete());
-    user.setIsActive(userFormBean.getIsActive());
-    user.setTokenCreateTime(userFormBean.getTokenCreateTime());
+    user.setLastName(userFormBean.getLastName());
+    user.setCreatedDate(date);
+    user.setIsActive(0L);
+    user.setTokenCreateTime(date);
+    user.setMobileNumber(userFormBean.getMobileNumber());
     return user;
   }
-*/
+
 }

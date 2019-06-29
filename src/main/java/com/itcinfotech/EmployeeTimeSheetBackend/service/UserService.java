@@ -2,19 +2,20 @@ package com.itcinfotech.EmployeeTimeSheetBackend.service;
 
 import java.util.List;
 
+import com.itcinfotech.EmployeeTimeSheetBackend.formbeans.UserFormBean;
 import com.itcinfotech.EmployeeTimeSheetBackend.model.User;
 
 
 public interface UserService {
-	public List<User> findAllUser();
+	List<User> findAllUser();
 
-	public User findUserByUserId(Long userId);
+	User findUserByUserId(Long userId);
 
-	public User activateUser(Long userId);
+	User activateUser(Long userId);
 
-	//public User saveUser(UserFormBean userFormBean);
+	User saveUser(UserFormBean userFormBean);
 
-	public User findUserByEmail(String email);
+	User findUserByEmail(String email);
 
 	//public User resetPassword(UserFormBean userFormBean);
 
